@@ -8,8 +8,8 @@ module Stitch
       false
     end
     
-    def compile(filename)
-      source   = File.read(filename)
+    def compile(path)
+      source = File.read(path)
       CoffeeScript.compile(source)
     end
   end

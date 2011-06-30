@@ -2,8 +2,8 @@ module Stitch
   class JavaScriptCompiler < Compiler
     extensions :js
     
-    def compile(filename)
-      File.read(filename)
+    def compile(path)
+      File.read(path)
     end
   end
 end

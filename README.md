@@ -30,7 +30,7 @@ Stitch includes a basic Rack server, for example this is how you'd use it with R
 
 Compilers need to inherit from `Stitch::Compiler`. They're very simple, for example:
 
-    class jQueryTmplCompiler < Stitch::Compiler
+    class TmplCompiler < Stitch::Compiler
       # List of supported extensions
       extensions :tmpl
     
