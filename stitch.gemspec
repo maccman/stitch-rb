@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "stitch/version"
 
 Gem::Specification.new do |s|
-  s.name        = "stitch"
+  s.name        = "stitch-rb"
   s.version     = Stitch::VERSION
   s.authors     = ["Alex MacCaw"]
   s.email       = ["maccman@gmail.com"]

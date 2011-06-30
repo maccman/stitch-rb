@@ -8,6 +8,10 @@ In other words, this is a [CommonJS](http://dailyjs.com/2010/10/18/modules/) Jav
 
 ##Usage
 
+Install the gem, or add it to your Gemfile:
+  
+    gem 'stitch-rb'
+
 You can compile your application like this:
 
     Stitch::Package.new(:paths => ["app"], :dependencies => ["lib/jquery.js"]).compile
@@ -18,9 +22,9 @@ You should give `Stitch::Package` an array of `:paths`, the relative directories
 
 ##Rails & Rack
 
-Stitch includes a basic Rack server, for example this is how you'd use it with Rails routes:
+Stitch includes a basic Rack server, for example this is how you'd use it with Rails 3 routes:
 
-    match '/application.js' => Stitch::Server.new(:paths => ["app/javascripts"])
+    match '/application.js' => Stitch::Server.new(:paths => ["app/assets/javascripts"])
 
 ##Adding compilers
 
