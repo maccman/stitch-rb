@@ -4,6 +4,7 @@ module Stitch
     
     enabled begin
       require "coffee-script"
+      true
     rescue LoadError
       false
     end
