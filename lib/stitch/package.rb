@@ -20,7 +20,11 @@ module Stitch
     
     protected    
       def compile_dependencies
-        @dependencies.map {|path| File.read(path) }.join("\n")
+        @dependencies.map {|path|
+          Dependency.from_path(path)
+        }.flatten.map { |dep|
+          dep.compile
+        }.join("\n")
       end
     
       def compile_sources
