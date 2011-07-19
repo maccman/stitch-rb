@@ -3,26 +3,24 @@ require "pathname"
 module Stitch
   class Dependency
     class << self
-      def from_path(root, path = nil, result = [])
-        path ||= root
+      def from_path(path, result = [])
         path = Pathname.new(path)
         
         if path.directory?
           path.children.each do |child| 
-            from_path(root, child, result)
+            from_path(child, result)
           end
         else
-          dependency = self.new(root, path)
+          dependency = self.new(path)
           result << dependency if dependency.valid?
         end
         result
       end
     end
     
-    attr_reader :root, :path
+    attr_reader :path
     
-    def initialize(root, path)
-      @root = Pathname.new(root)
+    def initialize(path)
       @path = Pathname.new(path)
     end
         
