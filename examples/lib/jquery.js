@@ -1,1 +1,1 @@
-// A dependency
+// A dependency - jquery.js
