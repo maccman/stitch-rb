@@ -21,7 +21,7 @@ module Stitch
     protected    
       def compile_dependencies
         @dependencies.map {|path|
-          Dependency.from_path(path)
+          Source.from_path(path)
         }.flatten.map { |dep|
           dep.compile
         }.join("\n")
