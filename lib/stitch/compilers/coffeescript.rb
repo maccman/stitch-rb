@@ -13,7 +13,7 @@ module Stitch
       source = File.read(path)
       CoffeeScript.compile(source)
     rescue => e
-      raise RuntimeError, "#{path}: #{e}", ''
+      raise "#{path}: #{e}"
     end
   end
 end
