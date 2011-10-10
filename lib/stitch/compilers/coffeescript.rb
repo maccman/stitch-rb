@@ -11,7 +11,7 @@ module Stitch
     
     def compile(path)
       source = File.read(path)
-      CoffeeScript.compile(source)
+      CoffeeScript.compile(source, :filename => path.to_s)
     end
   end
 end
