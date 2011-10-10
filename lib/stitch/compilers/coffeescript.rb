@@ -11,9 +11,7 @@ module Stitch
     
     def compile(path)
       source = File.read(path)
-      CoffeeScript.compile(source)
-    rescue => e
-      raise "#{path}: #{e}"
+      CoffeeScript.compile(source, :filename => path.to_s)
     end
   end
 end
