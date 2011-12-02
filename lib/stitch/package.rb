@@ -2,23 +2,26 @@ module Stitch
   class Package
     DEFAULTS = {
       :identifier   => "require",
-      :paths        => ["lib"],
+      :paths        => [],
+      :files        => [],
       :dependencies => []
     }
-    
+
     def initialize(options = {})
       options = DEFAULTS.merge(options)
-      
+
       @identifier   = options[:identifier]
-      @paths        = options[:paths]
-      @dependencies = options[:dependencies]
+      @paths        = Array(options[:paths])
+      @files        = Array(options[:files])
+      @root         = options[:root]
+      @dependencies = Array(options[:dependencies])
     end
-    
+
     def compile
       [compile_dependencies, compile_sources].join("\n")
     end
-    
-    protected    
+
+    protected
       def compile_dependencies
         @dependencies.map {|path|
           Source.from_path(path)
@@ -26,12 +29,22 @@ module Stitch
           dep.compile
         }.join("\n")
       end
-    
+
       def compile_sources
-        sources = @paths.map {|path| 
-          Source.from_path(path) 
+        sources = @paths.map {|path|
+          Source.from_path(path)
         }.flatten
-        
+
+        sources |= @files.map {|file|
+          Source.from_file(@root, file)
+        }.flatten
+
+        if sources.any?
+          stitch(sources)
+        end
+      end
+
+      def stitch(sources)
         result = <<-EOF
 (function(/*! Stitch !*/) {
   if (!this.#{@identifier}) {
@@ -84,11 +97,10 @@ module Stitch
   return this.#{@identifier}.define;
 }).call(this)({
         EOF
-
         sources.each_with_index do |source, i|
           result += i == 0 ? "" : ", "
           result += source.name.to_json
-          result += ": function(exports, require, module) {#{source.compile}}"
+          result += ": function(exports, require, module) {\n#{source.compile}\n}"
         end
 
         result += "});\n"
