@@ -25,11 +25,6 @@ module Stitch
         end
       end
 
-      def source?(path)
-        compiler = for_extension(Pathname(path).extname)
-        compiler && compiler.source?
-      end
-
       # Child methods
 
       def extensions(*exts)
@@ -67,3 +62,5 @@ end
 # Require default compilers
 require "stitch/compilers/javascript"
 require "stitch/compilers/coffeescript"
+require "stitch/compilers/tmpl"
+require "stitch/compilers/mustache"

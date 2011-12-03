@@ -83,13 +83,13 @@ module Stitch
       requires.map {|(_, pn)| self.class.resolve(pn, root) }
     end
 
-    def source?
-      valid? && compiler.source?
-    end
-
     protected
+      def source?
+        valid? && compiler.source?
+      end
+
       def compiler
-        Compiler.for_extension(ext)
+        @compiler ||= Compiler.for_extension(ext)
       end
   end
 end
