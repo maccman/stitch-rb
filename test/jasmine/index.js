@@ -50,7 +50,10 @@
   return this.require.define;
 }).call(this)({
 "models/orm": function(exports, require, module) {
-module.exports = "A ORM";
+module.exports = {orm: true};
+
+window.ormCount = window.ormCount || 0;
+window.ormCount += 1;
 }, "models/user": function(exports, require, module) {
 var ORM = require('models/orm');
 
@@ -58,9 +61,19 @@ var User = function(name){
   this.name = name;
 };
 
+User.ORM = ORM;
+
 module.exports = User;
+}, "models/orm": function(exports, require, module) {
+module.exports = {orm: true};
+
+window.ormCount = window.ormCount || 0;
+window.ormCount += 1;
+}, "models/person": function(exports, require, module) {
+var ORM = require('models/orm');
 }, "index": function(exports, require, module) {
 require('models/user');
+require('models/person');
 
 // Do some stuff
 }});
