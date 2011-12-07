@@ -7,7 +7,7 @@ class TestSource < Test::Unit::TestCase
   end
 
   def test_from_file
-    sources = Stitch::Source.from_file(FIXTURES.join(*%w{app index.js}))
+    sources = Stitch::Source.from_file(FIXTURES + "app" + "index.js")
     sources = sources.map {|s| s.path.relative_path_from(FIXTURES).to_s }
     assert_equal [
       "app/models/orm.js",
@@ -19,7 +19,7 @@ class TestSource < Test::Unit::TestCase
   end
 
   def test_from_path
-    sources = Stitch::Source.from_path(FIXTURES.join("app"))
+    sources = Stitch::Source.from_path(FIXTURES + "app")
     sources = sources.map {|s| s.path.relative_path_from(FIXTURES).to_s }
     assert_equal [
       "app/controllers/users.coffee",
@@ -31,15 +31,15 @@ class TestSource < Test::Unit::TestCase
   end
 
   def test_resolve
-    path = Stitch::Source.resolve("index.js", File.join(FIXTURES, "app"))
+    path = Stitch::Source.resolve("index.js", FIXTURES + "app")
     assert_equal path.relative_path_from(FIXTURES).to_s, "app/index.js"
 
-    path = Stitch::Source.resolve("index", File.join(FIXTURES, "app"))
+    path = Stitch::Source.resolve("index", FIXTURES + "app")
     assert_equal path.relative_path_from(FIXTURES).to_s, "app/index.js"
   end
 
   def test_require
-    source  = Stitch::Source.new(FIXTURES.join("app"), FIXTURES.join(*%w{app index.js}))
+    source  = Stitch::Source.new(FIXTURES + "app", FIXTURES + "app" + "index.js")
     sources = source.requires.map {|s| s.relative_path_from(FIXTURES).to_s }
     assert_equal ["app/models/user.js", "app/models/person.js"], sources
   end
