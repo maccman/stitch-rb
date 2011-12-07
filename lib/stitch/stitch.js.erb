@@ -3,7 +3,7 @@
     var modules = {}, cache = {};
     var require = function(name, root) {
       var path = expand(root, name), indexPath = expand(path, './index'), module, fn;
-      module   = cache[path] || cache[indexPath]
+      module   = cache[path] || cache[indexPath];
       if (module) {
         return module;
       } else if (fn = modules[path] || modules[path = indexPath]) {

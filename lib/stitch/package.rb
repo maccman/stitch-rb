@@ -53,7 +53,7 @@ module Stitch
         identifier = @identifier
         modules    = modules
 
-        template = File.read(File.join(File.dirname(__FILE__), "stitch.erb"))
+        template = File.read(File.join(File.dirname(__FILE__), "stitch.js.erb"))
         template = ERB.new(template)
         template.result(binding)
       end
