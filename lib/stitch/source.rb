@@ -2,68 +2,66 @@ require "pathname"
 
 module Stitch
   class Source
-    class << self
-      # Recursively load all the sources from a given directory
-      # Usage:
-      #   sources = Source.from_path("./app")
-      #
-      def from_path(root, path = nil, result = [])
-        path ||= root
-        path = Pathname.new(path)
+    # Recursively load all the sources from a given directory
+    # Usage:
+    #   sources = Source.from_path("./app")
+    #
+    def self.from_path(root, path = nil, result = [])
+      path ||= root
+      path = Pathname.new(path)
 
-        if path.directory?
-          path.children.each do |child|
-            from_path(root, child, result)
-          end
-        else
-          source = self.new(root, path)
-          result << source if source.valid?
+      if path.directory?
+        path.children.each do |child|
+          from_path(root, child, result)
         end
-        result
-      end
-
-      # Recursively resolve sources from a given file,
-      # dynamically resolving its dependencies
-      # Usage:
-      #   sources = Source.from_file("./app/index.js")
-      #
-      def from_file(root, path = nil, result = [])
-        root = Pathname.new(root)
-
-        unless path
-          path = root
-          root = root.dirname
-        end
-
+      else
         source = self.new(root, path)
-        source.requires.each do |child|
-          from_file(root, child, result)
-        end
+        result << source if source.valid?
+      end
+      result
+    end
 
-        result << source
+    # Recursively resolve sources from a given file,
+    # dynamically resolving its dependencies
+    # Usage:
+    #   sources = Source.from_file("./app/index.js")
+    #
+    def self.from_file(root, path = nil, result = [])
+      root = Pathname.new(root)
+
+      unless path
+        path = root
+        root = root.dirname
       end
 
-      # Resolve a require call to an absolute path
-      # Usage:
-      #   path = Source.resolve("../index.js", "/my/file.js")
-      #
-      def resolve(path, relative_to)
-        path        = Pathname.new(path)
-        relative_to = Pathname.new(relative_to)
-
-        unless path.absolute?
-          path = path.expand_path(relative_to)
-        end
-
-        return path if path.exist?
-
-        Compiler.source_extensions.each do |ext|
-          candidate = Pathname.new(path.to_s + "." + ext)
-          return candidate if candidate.exist?
-        end
-
-        raise "#{path} not found"
+      source = self.new(root, path)
+      source.requires.each do |child|
+        from_file(root, child, result)
       end
+
+      result << source
+    end
+
+    # Resolve a require call to an absolute path
+    # Usage:
+    #   path = Source.resolve("../index.js", "/my/file.js")
+    #
+    def self.resolve(path, relative_to)
+      path        = Pathname.new(path)
+      relative_to = Pathname.new(relative_to)
+
+      unless path.absolute?
+        path = path.expand_path(relative_to)
+      end
+
+      return path if path.exist?
+
+      Compiler.source_extensions.each do |ext|
+        candidate = Pathname.new(path.to_s + "." + ext)
+        return candidate if candidate.exist?
+      end
+
+      raise "#{path} not found"
     end
 
     attr_reader :root, :path
