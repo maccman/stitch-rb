@@ -1,3 +1,5 @@
+require "erb"
+
 module Stitch
   class Package
     DEFAULTS = {
@@ -46,66 +48,14 @@ module Stitch
         end
       end
 
-      def stitch(sources)
-        result = <<-EOF
-(function(/*! Stitch !*/) {
-  if (!this.#{@identifier}) {
-    var modules = {}, cache = {}, require = function(name, root) {
-      var module = cache[name], path = expand(root, name), fn;
-      if (module) {
-        return module;
-      } else if (fn = modules[path] || modules[path = expand(path, './index')]) {
-        module = {id: name, exports: {}};
-        try {
-          cache[name] = module.exports;
-          fn(module.exports, function(name) {
-            return require(name, dirname(path));
-          }, module);
-          return cache[name] = module.exports;
-        } catch (err) {
-          delete cache[name];
-          throw err;
-        }
-      } else {
-        throw 'module \\'' + name + '\\' not found';
-      }
-    }, expand = function(root, name) {
-      var results = [], parts, part;
-      if (/^\\.\\.?(\\/|$)/.test(name)) {
-        parts = [root, name].join('/').split('/');
-      } else {
-        parts = name.split('/');
-      }
-      for (var i = 0, length = parts.length; i < length; i++) {
-        part = parts[i];
-        if (part == '..') {
-          results.pop();
-        } else if (part != '.' && part != '') {
-          results.push(part);
-        }
-      }
-      return results.join('/');
-    }, dirname = function(path) {
-      return path.split('/').slice(0, -1).join('/');
-    };
-    this.#{@identifier} = function(name) {
-      return require(name, '');
-    }
-    this.#{@identifier}.define = function(bundle) {
-      for (var key in bundle)
-        modules[key] = bundle[key];
-    };
-  }
-  return this.#{@identifier}.define;
-}).call(this)({
-        EOF
-        sources.each_with_index do |source, i|
-          result += i == 0 ? "" : ", "
-          result += source.name.to_json
-          result += ": function(exports, require, module) {\n#{source.compile}\n}"
-        end
+      def stitch(modules)
+        # ERB binding variables
+        identifier = @identifier
+        modules    = modules
 
-        result += "});\n"
+        template = File.read(File.join(File.dirname(__FILE__), "stitch.erb"))
+        template = ERB.new(template)
+        template.result(binding)
       end
   end
 end

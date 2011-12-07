@@ -1,6 +1,5 @@
-
 (function(/*! Stitch !*/) {
-  if (!this.require) {
+  if (!this.<%= identifier %>) {
     var modules = {}, cache = {};
     var require = function(name, root) {
       var path = expand(root, name), indexPath = expand(path, './index'), module, fn;
@@ -39,40 +38,22 @@
     var dirname = function(path) {
       return path.split('/').slice(0, -1).join('/');
     };
-    this.require = function(name) {
+    this.<%= identifier %> = function(name) {
       return require(name, '');
     };
-    this.require.define = function(bundle) {
+    this.<%= identifier %>.define = function(bundle) {
       for (var key in bundle) {
         modules[key] = bundle[key];
       }
     };
-    this.require.modules = modules;
-    this.require.cache   = cache;
+    this.<%= identifier %>.modules = modules;
+    this.<%= identifier %>.cache   = cache;
   }
-  return this.require.define;
+  return this.<%= identifier %>.define;
 }).call(this)({
-  "models/orm": function(exports, require, module) {
-module.exports = {orm: true};
-
-window.ormCount = window.ormCount || 0;
-window.ormCount += 1;
-}, "models/user": function(exports, require, module) {
-var ORM = require('models/orm');
-
-var User = function(name){
-  this.name = name;
-};
-
-User.ORM = ORM;
-
-module.exports = User;
-}, "models/person": function(exports, require, module) {
-var ORM = require('models/orm');
-}, "index": function(exports, require, module) {
-require('models/user');
-require('models/person');
-
-// Do some stuff
-}
+  <%=
+    modules.map do |mod|
+      "#{mod.name.to_json}: function(exports, require, module) {\n#{mod.compile}\n}"
+    end.join(', ')
+  %>
 });
