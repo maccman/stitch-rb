@@ -5,12 +5,13 @@ class TestJasmine < Test::Unit::TestCase
   end
 
   def test_stitch
-    File.open(File.dirname(__FILE__) + '/jasmine/index.js', 'w+') do |f|
+    root = File.dirname(__FILE__)
+    File.open(root + '/jasmine/index.js', 'w+') do |f|
       f.write Stitch::Package.new(
-        :files => [File.dirname(__FILE__) + '/fixtures/app/index.js'],
-        :root  => File.dirname(__FILE__) + '/fixtures/app'
+        :files => [root + '/fixtures/app/index.js'],
+        :root  =>  root + '/fixtures/app'
       ).compile
     end
-    system 'open', File.dirname(__FILE__) + '/jasmine/index.html'
+    system 'open', root + '/jasmine/index.html'
   end
 end

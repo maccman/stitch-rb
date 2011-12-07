@@ -64,11 +64,6 @@ var User = function(name){
 User.ORM = ORM;
 
 module.exports = User;
-}, "models/orm": function(exports, require, module) {
-module.exports = {orm: true};
-
-window.ormCount = window.ormCount || 0;
-window.ormCount += 1;
 }, "models/person": function(exports, require, module) {
 var ORM = require('models/orm');
 }, "index": function(exports, require, module) {

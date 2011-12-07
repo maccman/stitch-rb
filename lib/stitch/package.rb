@@ -39,6 +39,8 @@ module Stitch
           Source.from_file(@root, file)
         }.flatten
 
+        sources.uniq!
+
         if sources.any?
           stitch(sources)
         end

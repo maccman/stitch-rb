@@ -1,7 +1,7 @@
 module Stitch
   class TmplCompiler < Compiler
     extensions :tmpl
-    
+
     def compile(path)
       content = File.read(path)
       %{var template = jQuery.template(#{content.to_json});

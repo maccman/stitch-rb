@@ -29,7 +29,6 @@ module Stitch
           from_file(root, child, result)
         end
 
-        raise "Recursive" if result.include?(source)
         result << source
       end
 
@@ -81,6 +80,15 @@ module Stitch
       return [] unless source?
       requires = path.read.scan(/require\(("|')(.+)\1\)/)
       requires.map {|(_, pn)| self.class.resolve(pn, root) }
+    end
+
+    def hash
+      self.path.hash
+    end
+
+    def eql?(source)
+      source.is_a?(Source) &&
+        source.path.to_s == self.path.to_s
     end
 
     protected
