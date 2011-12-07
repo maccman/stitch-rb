@@ -3,6 +3,10 @@ require "pathname"
 module Stitch
   class Source
     class << self
+      # Recursively load all the sources from a given directory
+      # Usage:
+      #   sources = Source.from_path("./app")
+      #
       def from_path(root, path = nil, result = [])
         path ||= root
         path = Pathname.new(path)
@@ -18,7 +22,14 @@ module Stitch
         result
       end
 
+      # Recursively resolve sources from a given file,
+      # dynamically resolving its dependencies
+      # Usage:
+      #   sources = Source.from_file("./app/index.js")
+      #
       def from_file(root, path = nil, result = [])
+        root = Pathname.new(root)
+
         unless path
           path = root
           root = root.dirname
@@ -32,6 +43,10 @@ module Stitch
         result << source
       end
 
+      # Resolve a require call to an absolute path
+      # Usage:
+      #   path = Source.resolve("../index.js", "/my/file.js")
+      #
       def resolve(path, relative_to)
         path        = Pathname.new(path)
         relative_to = Pathname.new(relative_to)
@@ -76,6 +91,8 @@ module Stitch
       !!compiler
     end
 
+    # Return an array of resolved paths
+    # specifying this source's dependencies
     def requires
       return [] unless source?
       requires = path.read.scan(/require\(("|')(.+)\1\)/)
