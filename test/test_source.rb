@@ -26,7 +26,8 @@ class TestSource < Test::Unit::TestCase
       "app/index.js",
       "app/models/orm.js",
       "app/models/person.js",
-      "app/models/user.js"
+      "app/models/user.js",
+      "app/views/index.mustache"
     ], sources
   end
 
