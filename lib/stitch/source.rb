@@ -56,7 +56,7 @@ module Stitch
 
       return path if path.exist?
 
-      Compiler.source_extensions.each do |ext|
+      Compiler.all_extensions.each do |ext|
         candidate = Pathname.new(path.to_s + "." + ext)
         return candidate if candidate.exist?
       end

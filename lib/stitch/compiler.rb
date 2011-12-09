@@ -13,9 +13,8 @@ module Stitch
         Compiler.compilers.select {|c| c.enabled? }
       end
 
-      def source_extensions
-        compilers = all.select {|c| c.source? }
-        compilers.map {|c| c.extensions }.flatten
+      def all_extensions
+        Compiler.all.map {|c| c.extensions }.flatten
       end
 
       def for_extension(extension)
