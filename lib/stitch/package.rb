@@ -27,7 +27,7 @@ module Stitch
       def compile_dependencies
         @dependencies.map {|path|
           Source.from_path(path)
-        }.flatten.map { |dep|
+        }.flatten.sort {|a, b| a.name.to_s <=> b.name.to_s }.map { |dep|
           dep.compile
         }.join("\n")
       end

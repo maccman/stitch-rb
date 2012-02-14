@@ -19,7 +19,7 @@ module Stitch
       # always remove .serenade ending
       serenade_path.gsub!(/\.serenade$/, "")
 
-      %{var viewtemplate = '#{content}';
+      %{var viewTemplate = '#{content}';
         var view = Serenade.view('#{serenade_path}', viewTemplate);
         module.exports = view;
       }
