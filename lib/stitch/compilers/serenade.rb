@@ -4,6 +4,11 @@ module Stitch
 
     def compile(path)
       content = File.read(path)
+      # make it possible to register the view as a relative path
+      # more intuitive than as an absolute path (all the way to /)
+      # set the environment variable STITCH_SERENADE_ROOT to the
+      # point in the hierarchy where you want relative paths
+      # from
       serenade_path = if ENV['STITCH_SERENADE_ROOT']
         root = ENV['STITCH_SERENADE_ROOT']
         root = root + "/" unless root[-1..-1] == "/"
