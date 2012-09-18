@@ -6,13 +6,19 @@ module Stitch
     # Usage:
     #   sources = Source.from_path("./app")
     #
-    def self.from_path(root, path = nil, result = [])
+    def self.from_path(root, path = nil, result = [], excludes = [])
       path ||= root
       path = Pathname.new(path)
 
+      for exclude in excludes
+        if path.to_s === exclude
+          return
+        end
+      end
+
       if path.directory?
         path.children.each do |child|
-          from_path(root, child, result)
+          from_path(root, child, result, excludes)
         end
       else
         source = self.new(root, path)
