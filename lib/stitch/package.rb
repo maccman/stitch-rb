@@ -6,7 +6,8 @@ module Stitch
       :identifier   => "require",
       :paths        => [],
       :files        => [],
-      :dependencies => []
+      :dependencies => [],
+      :excludes     => []
     }
 
     def initialize(options = {})
@@ -17,6 +18,7 @@ module Stitch
       @files        = Array(options[:files])
       @root         = options[:root]
       @dependencies = Array(options[:dependencies])
+      @excludes     = Array(options[:excludes])
     end
 
     def compile
@@ -34,7 +36,7 @@ module Stitch
 
       def compile_sources
         sources = @paths.map {|path|
-          Source.from_path(path)
+          Source.from_path(path, nil, [], @excludes)
         }.flatten
 
         sources |= @files.map {|file|
